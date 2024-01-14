@@ -27,7 +27,8 @@ function render(el, container) {
       children: [el],
     },
   }
-  // const dom = el.type === 'TEXT_ELEMENT' ? document.createTextNode('') : document.createElement(el.type)
+  // console.log('el', el)
+  //  const dom = el.type === 'TEXT_ELEMENT' ? document.createTextNode('') : document.createElement(el.type)
 
   // console.log('el', el)
   // // id class
@@ -72,6 +73,9 @@ function initChildren(fiber) {
       prevChild.sibling = newFiber
     }
     prevChild = newFiber
+    // if (child.props.children.length > 0) {
+    //   initChildren(newFiber)
+    // }
   })
 }
 function perforWorkOfUnit(fiber) {
@@ -107,7 +111,7 @@ function workLoop(deadline) {
 
     shouldYield = deadline.timeRemaining() < 0
   }
-  console.log('workId:' + workId, nextWorkOfUnit)
+  // console.log('workId:' + workId, nextWorkOfUnit)
   requestIdleCallback(workLoop)
 }
 requestIdleCallback(workLoop)

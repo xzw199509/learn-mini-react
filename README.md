@@ -12,3 +12,14 @@ day 02
 requestIdleCallback 与 fiber
 requestIdleCallback 利用浏览器空闲时间调用
 fiber 使用单链表结构表示数据结构，定义对dom节点遍历方式
+问题：
+构造视频中的dom树无法展示
+const App = <div>A
+  <div>B
+    <div>D</div>
+    <div>F</div>
+  </div>
+  <div>C
+    <div>G</div>
+  </div>
+</div>
