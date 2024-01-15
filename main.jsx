@@ -1,5 +1,5 @@
 import ReactDom from './core/ReactDom.js';
 import App from './App';
-console.log('mainJs');
+import React from './core/React.js';
 
-ReactDom.createRoot(document.querySelector("#root")).render(App)
+ReactDom.createRoot(document.querySelector("#root")).render(<App></App>)

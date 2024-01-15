@@ -12,6 +12,12 @@ day 02
 requestIdleCallback 与 fiber
 requestIdleCallback 利用浏览器空闲时间调用
 fiber 使用单链表结构表示数据结构，定义对dom节点遍历方式
+1.创建dom
+2.处理props
+3.转换链表 设置指针
+4.返回下一个需要执行的任务
+
+
 问题：
 构造视频中的dom树无法展示
 const App = <div>A
@@ -23,3 +29,24 @@ const App = <div>A
     <div>G</div>
   </div>
 </div>
+
+day 03
+1、实现统一提交
+顶部节点为root.child root为next
+fiber添加到dom
+fiber.parent.dom.append(fiber.dom)
+对子元素进行添加 child与sibling
+对以上内容进行递归调用
+以及对孩子节点判断是否包含内容
+!fiber
+顶部节点只添加一次在root添加后状态修改
+
+2、实现functionComponent处理逻辑
+ （1）functionComponent fiber.type()返回的是vdom
+ （2）由于返回的是个element数据 children为element[]需要套上处理成数组
+ （3）functionComponent没有vdom属性得继续向上查找
+ （4）functionComponent传参 fiber.props
+ （5）之前只处理child 为string 类型  需要添加 number类型
+
+问题：叔节点没有渲染
+问题原因在返回 fiber.parent.sbiling 时，parent节点为div时，会没有兄弟节点，还需向上查找
