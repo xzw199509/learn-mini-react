@@ -41,12 +41,13 @@ fiber.parent.dom.append(fiber.dom)
 !fiber
 顶部节点只添加一次在root添加后状态修改
 
-2、实现functionComponent处理逻辑
- （1）functionComponent fiber.type()返回的是vdom
- （2）由于返回的是个element数据 children为element[]需要套上处理成数组
- （3）functionComponent没有vdom属性得继续向上查找
- （4）functionComponent传参 fiber.props
- （5）之前只处理child 为string 类型  需要添加 number类型
+2、实现functionComponent处理逻辑 简称fc
+ （1）fc fiber.type() 返回的是 vdom
+ （2）由于返回的是个element数据 children 为 element[] 需要套上处理成数组
+ （3）fc 没有 vdom 属性得继续向上查找
+ （4）fc 传参 fiber.props
+ （5）之前只处理 child 为 string 类型  需要添加 number类型
 
 问题：叔节点没有渲染
 问题原因在返回 fiber.parent.sbiling 时，parent节点为div时，会没有兄弟节点，还需向上查找
+处理方式查找父节点的兄弟节点时，没查找到继续向上查找

@@ -25,8 +25,8 @@ function App() {
   return (<div>A
     <div>B
       <div>D</div>
-      <Counter num={10}></Counter>
-      <Counter num={20}></Counter>
+      <Counter num={10} id='c1'></Counter>
+      <Counter num={20} id='c2'></Counter>
       {/* <CounterContainer></CounterContainer> */}
       <div>F</div>
     </div>

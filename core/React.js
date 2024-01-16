@@ -22,13 +22,13 @@ function createElement(type, props, ...children) {
 }
 
 function render(el, container) {
-  nextWorkOfUnit = {
+  nextUnitOfWork = {
     dom: container,
     props: {
       children: [el],
     },
   }
-  root = nextWorkOfUnit
+  root = nextUnitOfWork
   // console.log('el', el)
   //  const dom = el.type === 'TEXT_ELEMENT' ? document.createTextNode('') : document.createElement(el.type)
 
@@ -76,11 +76,13 @@ function initChildren(fiber, children) {
     }
     prevChild = newFiber
   })
+  console.log('initChildren',fiber);
 }
-function perforWorkOfUnit(fiber) {
+
+function perforUnitOfWork(fiber) {
   const isFuntionComponent = typeof fiber.type === "function"
   // if (isFuntionComponent) {
-  //   console.log(fiber.type()); // 查看返回内容
+  //   console.log(fiber.type); // 查看返回内容
   // }
   // 1. 创建 dom
   if (!isFuntionComponent) {
@@ -111,26 +113,28 @@ function perforWorkOfUnit(fiber) {
   }
   // return fiber.parent?.sibling
 }
+
 let workId = 1
-let nextWorkOfUnit = null
+let nextUnitOfWork = null
 let root = null
 function workLoop(deadline) {
   workId++
   let shouldYield = false
-  while (!shouldYield && nextWorkOfUnit) {
-    nextWorkOfUnit = perforWorkOfUnit(nextWorkOfUnit)
-
+  while (!shouldYield && nextUnitOfWork) {
+    nextUnitOfWork = perforUnitOfWork(nextUnitOfWork)
+    // 剩余空闲时间
     shouldYield = deadline.timeRemaining() < 0
   }
 
-  if (!nextWorkOfUnit && root) {
+  if (!nextUnitOfWork && root) {
     commitRoot()
   }
-  // console.log('workId:' + workId, nextWorkOfUnit)
+  // console.log('workId:' + workId, nextUnitOfWork)
   requestIdleCallback(workLoop)
 }
 
 function commitRoot() {
+  console.log('commitRoot');
   commitWork(root.child)
   root = null
 }
