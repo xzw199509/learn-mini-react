@@ -14,7 +14,7 @@ function createElement(type, props, ...children) {
     props: {
       ...props,
       children: children.map((child) => {
-        const isTextNode = typeof child === "string" || typeof child === "number"
+        const isTextNode = typeof child === 'string' || typeof child === 'number'
         return isTextNode ? createTextNode(child) : child
       }),
     },
@@ -76,28 +76,31 @@ function initChildren(fiber, children) {
     }
     prevChild = newFiber
   })
-  console.log('initChildren',fiber);
+  console.log('initChildren', fiber)
+}
+
+function updateFunctionComponent(fiber) {
+  const children = [fiber.type(fiber.props)]
+  initChildren(fiber, children)
+}
+
+function updateHostComponent(fiber) {
+  if (!fiber.dom) {
+    const dom = (fiber.dom = createDom(fiber.type))
+    updateProps(dom, fiber.props)
+  }
+
+  const children = fiber.props.children
+  initChildren(fiber, children)
 }
 
 function perforUnitOfWork(fiber) {
-  const isFuntionComponent = typeof fiber.type === "function"
-  // if (isFuntionComponent) {
-  //   console.log(fiber.type); // 查看返回内容
-  // }
-  // 1. 创建 dom
-  if (!isFuntionComponent) {
-    if (!fiber.dom) {
-      const dom = (fiber.dom = createDom(fiber.type))
-      // fiber.parent.dom.append(dom)
-
-      // 2. 处理 props
-      updateProps(dom, fiber.props)
-    }
+  const isFuntionComponent = typeof fiber.type === 'function'
+  if (isFuntionComponent) {
+    updateFunctionComponent(fiber)
+  } else {
+    updateHostComponent(fiber)
   }
-
-  // 3. 转换链表 设置好指针
-  const children = isFuntionComponent ? [fiber.type(fiber.props)] : fiber.props.children
-  initChildren(fiber, children)
 
   // 4. 返回下一个要执行的任务
   if (fiber.child) {
@@ -108,7 +111,7 @@ function perforUnitOfWork(fiber) {
   }
   let nextFiber = fiber
   while (nextFiber) {
-    if(nextFiber.sibling) return nextFiber.sibling
+    if (nextFiber.sibling) return nextFiber.sibling
     nextFiber = nextFiber.parent
   }
   // return fiber.parent?.sibling
@@ -134,7 +137,7 @@ function workLoop(deadline) {
 }
 
 function commitRoot() {
-  console.log('commitRoot');
+  console.log('commitRoot')
   commitWork(root.child)
   root = null
 }
@@ -150,9 +153,7 @@ function commitWork(fiber) {
   }
   commitWork(fiber.child)
   commitWork(fiber.sibling)
-
 }
-
 
 requestIdleCallback(workLoop)
 
