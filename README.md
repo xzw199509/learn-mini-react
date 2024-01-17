@@ -51,3 +51,18 @@ fiber.parent.dom.append(fiber.dom)
 问题：叔节点没有渲染
 问题原因在返回 fiber.parent.sbiling 时，parent节点为div时，会没有兄弟节点，还需向上查找
 处理方式查找父节点的兄弟节点时，没查找到继续向上查找
+
+
+day 04
+1、点击事件实现
+点击事件 onClick ，在更新props时，在遍历中判断 key 是否为on开头 为dom添加对应的监听事件，挂上 props[key] 中对应的方法
+
+2、更新props
+触发更新方法后 最新的工作单元赋值给 root 去执行 
+
+在 initChildren 中，构造新旧fiber节点中对应关系
+
+处理 diff props
+(1)old有，new无，去删除
+(2)old无，new有，去添加
+(3)old有，new有，去修改
