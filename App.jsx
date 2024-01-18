@@ -1,36 +1,88 @@
 import React from "./core/React.js";
 
-let count = 10
-let props = { id: "11111111" }
-function Counter({ num }) {
+// let count = 10
+// let props = { id: "11111111" }
+// function Counter({ num }) {
+//   function handleClick() {
+//     console.log("click", count);
+//     count++
+//     props = {}
+//     React.update()
+//   }
+//   return (
+//     <div {...props}>count:{count}
+//       <button onClick={handleClick}>click</button>
+//     </div>
+//   )
+// }
+// function CounterContainer() {
+//   return <Counter></Counter>
+// }
+
+// function App() {
+//   return (<div>A
+//     <div>B
+//       <div>D</div>
+//       <Counter num={10} id='c1'></Counter>
+//       {/* <Counter num={20} id='c2'></Counter> */}
+//       {/* <CounterContainer></CounterContainer> */}
+//       <div>F</div>
+//     </div>
+//     <div>C
+//       <div>G</div>
+//     </div>
+//   </div>)
+// }
+
+let countFoo = 1
+function Foo() {
+  console.log("foo rerun");
+  const update = React.update()
   function handleClick() {
-    console.log("click", count);
-    count++
-    props = {}
-    React.update()
+    countFoo++
+    update()
   }
   return (
-    <div {...props}>count:{count}
+    <div>
+      <h1>foo</h1>
+      {countFoo}
       <button onClick={handleClick}>click</button>
     </div>
   )
 }
-function CounterContainer() {
-  return <Counter></Counter>
+
+let countBar = 1
+function Bar() {
+  console.log("bar rerun");
+  const update = React.update()
+  function handleClick() {
+    countBar++
+    update()
+  }
+  return (
+    <div>
+      <h1>bar</h1>
+      {countBar}
+      <button onClick={handleClick}>click</button>
+    </div>
+  )
 }
 
+let countRoot = 1
 function App() {
-  return (<div>A
-    <div>B
-      <div>D</div>
-      <Counter num={10} id='c1'></Counter>
-      {/* <Counter num={20} id='c2'></Counter> */}
-      {/* <CounterContainer></CounterContainer> */}
-      <div>F</div>
+  console.log("app rerun")
+  const update = React.update()
+  function handleClick() {
+    countRoot++
+    update()
+  }
+  return (
+    <div>
+      hi-mini-react count: {countRoot}
+      <button onClick={handleClick}>click</button>
+      <Foo></Foo>
+      <Bar></Bar>
     </div>
-    <div>C
-      <div>G</div>
-    </div>
-  </div>)
+  )
 }
 export default App

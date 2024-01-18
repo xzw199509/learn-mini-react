@@ -86,3 +86,9 @@ commitRoot时，遍历deletions删除
 4、解决 edge case 的方式
 处理 child 为 false 的情况,不新建 newFiber;
 以及不给prevChild 赋值 newFiber
+
+5、减少重复计算
+处理fc时 对传入的fiber进行存储
+使用闭包包裹 update 中方法
+
+
