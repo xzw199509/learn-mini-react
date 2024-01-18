@@ -58,11 +58,31 @@ day 04
 点击事件 onClick ，在更新props时，在遍历中判断 key 是否为on开头 为dom添加对应的监听事件，挂上 props[key] 中对应的方法
 
 2、更新props
-触发更新方法后 最新的工作单元赋值给 root 去执行 
+update 使用最新的 nextUnitOfWork 更新 root
+触发更新方法
 
-在 initChildren 中，构造新旧fiber节点中对应关系
+在 performUnitOfWork 中，构造新旧fiber节点中对应关系
 
 处理 diff props
 (1)old有，new无，去删除
 (2)old无，new有，去添加
 (3)old有，new有，去修改
+
+day 05 
+1、diff 更新 children
+2、删除 节点
+（1）删除dom
+（2）删除fc
+关于如何处理dom与fc节点，如果fiber.dom 为空，进行递归传入 fiber.child 去移除dom
+
+更新时填充deletions
+commitRoot时，遍历deletions删除
+处理完清空deletions
+
+3、删除多余节点
+问题：对于叶子节点被修改，叶子节点兄弟节点未被删除
+处理方式：initChildren 中处理叶子节点的兄弟节点添加到deletions
+
+4、解决 edge case 的方式
+处理 child 为 false 的情况,不新建 newFiber;
+以及不给prevChild 赋值 newFiber

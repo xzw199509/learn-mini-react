@@ -28,7 +28,7 @@ function render(el, container) {
       children: [el],
     },
   }
-  root = nextUnitOfWork
+  wipRoot = nextUnitOfWork
 }
 
 function createDom(type) {
@@ -65,7 +65,7 @@ function updateProps(dom, nextProps, prevProps) {
     // }
   })
 }
-function initChildren(fiber, children) {
+function reconcileChildren(fiber, children) {
   // const children = fiber.props.children
   let oldFiber = fiber.alternate?.child
   let prevChild = null
@@ -84,14 +84,20 @@ function initChildren(fiber, children) {
         alternate: oldFiber,
       }
     } else {
-      newFiber = {
-        type: child.type,
-        props: child.props,
-        child: null,
-        parent: fiber,
-        sibling: null,
-        dom: null,
-        effectTag: 'placement',
+      if (child) {
+        newFiber = {
+          type: child.type,
+          props: child.props,
+          child: null,
+          parent: fiber,
+          sibling: null,
+          dom: null,
+          effectTag: 'placement',
+        }
+      }
+
+      if (oldFiber) {
+        deletions.push(oldFiber)
       }
     }
     if (oldFiber) {
@@ -103,13 +109,19 @@ function initChildren(fiber, children) {
     } else {
       prevChild.sibling = newFiber
     }
-    prevChild = newFiber
+    if (newFiber) {
+      prevChild = newFiber
+    }
   })
+  while (oldFiber) {
+    deletions.push(oldFiber)
+    oldFiber = oldFiber.sibling
+  }
 }
 
 function updateFunctionComponent(fiber) {
   const children = [fiber.type(fiber.props)]
-  initChildren(fiber, children)
+  reconcileChildren(fiber, children)
 }
 
 function updateHostComponent(fiber) {
@@ -119,7 +131,7 @@ function updateHostComponent(fiber) {
   }
 
   const children = fiber.props.children
-  initChildren(fiber, children)
+  reconcileChildren(fiber, children)
 }
 
 function performUnitOfWork(fiber) {
@@ -147,8 +159,10 @@ function performUnitOfWork(fiber) {
 
 let workId = 1
 let nextUnitOfWork = null
-let root = null
+// work in progress
+let wipRoot = null
 let currentRoot = null
+let deletions = []
 function workLoop(deadline) {
   workId++
   let shouldYield = false
@@ -158,7 +172,7 @@ function workLoop(deadline) {
     shouldYield = deadline.timeRemaining() < 0
   }
 
-  if (!nextUnitOfWork && root) {
+  if (!nextUnitOfWork && wipRoot) {
     commitRoot()
   }
   // console.log('workId:' + workId, nextUnitOfWork)
@@ -166,10 +180,12 @@ function workLoop(deadline) {
 }
 
 function commitRoot() {
-  console.log('commitRoot')
-  commitWork(root.child)
-  currentRoot = root
-  root = null
+  // console.log('commitRoot')
+  deletions.forEach(commitDeletion)
+  commitWork(wipRoot.child)
+  currentRoot = wipRoot
+  wipRoot = null
+  deletions = []
 }
 
 function commitWork(fiber) {
@@ -189,7 +205,17 @@ function commitWork(fiber) {
   commitWork(fiber.child)
   commitWork(fiber.sibling)
 }
-
+function commitDeletion(fiber) {
+  if (fiber.dom) {
+    let fiberParent = fiber.parent
+    while (!fiberParent.dom) {
+      fiberParent = fiberParent.parent
+    }
+    fiberParent.dom.removeChild(fiber.dom)
+  } else {
+    commitDeletion(fiber.child)
+  }
+}
 requestIdleCallback(workLoop)
 
 function update() {
@@ -198,7 +224,7 @@ function update() {
     props: currentRoot.props,
     alternate: currentRoot,
   }
-  root = nextUnitOfWork
+  wipRoot = nextUnitOfWork
 }
 const React = {
   update,
