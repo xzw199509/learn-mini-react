@@ -90,5 +90,14 @@ commitRoot时，遍历deletions删除
 5、减少重复计算
 处理fc时 对传入的fiber进行存储
 使用闭包包裹 update 中方法
+还需重新理解
 
+day 06 
+useState
+数据更新方法中，给nextUnitOfWork赋值，commitRoot能够被触发
 
+统一触发action
+将 action 存入上一个fiber中，下次构建时一起处理
+
+提前检测 减少更新
+setState 时，判断action返回值是否与state值想同

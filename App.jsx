@@ -33,6 +33,24 @@ import React from "./core/React.js";
 //     </div>
 //   </div>)
 // }
+let props = { id: "11111111" }
+function Counter({ num }) {
+  const [count, setCount] = React.useState(10)
+  const [bar, setBar] = React.useState('bar')
+  function handleClick() {
+    setCount((c) => c + 1)
+    setBar((s) => s + 'bar')
+  }
+  return (
+    <div {...props}>count:{count}
+      <button onClick={handleClick}>click</button>
+      bar:{bar}
+    </div>
+  )
+}
+function CounterContainer() {
+  return <Counter></Counter>
+}
 
 let countFoo = 1
 function Foo() {
@@ -78,10 +96,11 @@ function App() {
   }
   return (
     <div>
-      hi-mini-react count: {countRoot}
-      <button onClick={handleClick}>click</button>
-      <Foo></Foo>
-      <Bar></Bar>
+      {/* hi-mini-react count: {countRoot} */}
+      <Counter></Counter>
+      {/* <button onClick={handleClick}>click</button> */}
+      {/* <Foo></Foo>
+      <Bar></Bar> */}
     </div>
   )
 }
