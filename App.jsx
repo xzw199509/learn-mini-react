@@ -35,12 +35,30 @@ import React from "./core/React.js";
 // }
 let props = { id: "11111111" }
 function Counter({ num }) {
-  const [count, setCount] = React.useState(10)
+  const [count, setCount] = React.useState(1)
   const [bar, setBar] = React.useState('bar')
+
   function handleClick() {
     setCount((c) => c + 1)
     setBar((s) => s + 'bar')
   }
+
+  React.useEffect(() => {
+    console.log('init');
+  }, [])
+  React.useEffect(() => {
+    console.log('count', count);
+    return () => {
+      console.log('cleanup 1');
+    }
+  }, [count])
+  React.useEffect(() => {
+    console.log('count', count);
+    return () => {
+      console.log('cleanup 2');
+    }
+  }, [count])
+
   return (
     <div {...props}>count:{count}
       <button onClick={handleClick}>click</button>
@@ -88,12 +106,12 @@ function Bar() {
 
 let countRoot = 1
 function App() {
-  console.log("app rerun")
-  const update = React.update()
-  function handleClick() {
-    countRoot++
-    update()
-  }
+  // console.log("app rerun")
+  // const update = React.update()
+  // function handleClick() {
+  //   countRoot++
+  //   update()
+  // }
   return (
     <div>
       {/* hi-mini-react count: {countRoot} */}

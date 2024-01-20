@@ -94,6 +94,7 @@ commitRoot时，遍历deletions删除
 
 day 06 
 useState
+作用用于数据创建于赋值
 数据更新方法中，给nextUnitOfWork赋值，commitRoot能够被触发
 
 统一触发action
@@ -101,3 +102,13 @@ useState
 
 提前检测 减少更新
 setState 时，判断action返回值是否与state值想同
+
+day 07 useEffect
+useEffect(()=>{
+  console.log()
+})
+作用监听数据，数据改变时触发函数，传入为空，只会在初始化时调用
+调用时机是在 React 完成对 DOM 的渲染之后，并且浏览器完成绘制之前
+
+实现cleanup 清空副作用
+调用时机是在所有effect之前
